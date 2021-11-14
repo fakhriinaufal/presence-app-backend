@@ -1,0 +1,639 @@
+swagger: '2.0'
+info:
+  description: This API for Presence App
+  version: 1.0.0
+  title: Presence App API
+  
+  contact:
+    email: fha.naufal06@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+- name: department
+- name: user
+- name: schedule
+- name: presence
+
+paths:
+  /departments:
+    get:
+      summary: get all departments data
+      produces:
+      - application/json
+      responses:
+        200:
+          description: get all department
+          schema:
+            type: object
+            properties:
+              status: 
+                type: string
+                example: OK
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Department'
+      tags:
+        - department
+    post:
+      summary: create new department
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/Department'
+      responses:
+        200:
+          description: success created new department
+          schema:
+            type: object
+            properties:
+              status: 
+                type: string
+                example: OK
+              data:
+                $ref: '#/definitions/Department'
+        400:
+          description: bad payload
+          schema:
+            $ref: '#/definitions/BadPayload'
+      tags:
+      - department
+  /departments/{id}:
+    get:
+      summary: get department with spesific id
+      
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get department data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Department'
+        404:
+          description: department doesn't exist
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: department with current id doesn't exist
+      tags:
+      - department
+      
+    put:
+      summary: update department data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success update department data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Department'
+        400:
+          description: bad payload
+          schema:
+            $ref: '#/definitions/BadPayload'
+              
+      tags:
+      - department
+        
+    delete:
+      summary: delete department data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success delete department data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success deleted department data
+      tags:
+      - department
+  
+  /users:
+    get:
+      summary: Get all users
+      tags:
+      - user
+      produces:
+      - application/json
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/User'
+    post:
+      summary: add new user
+      tags:
+      - user
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user item
+        required: true
+        description: user data to be added
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: item created
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: '#/definitions/User'
+              
+        400:
+          description: invalid input, object invalid
+  /users/{id}:
+    get:
+      summary: get user data with spesific id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: User Id
+      responses:
+        200:
+          description: user exist
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: '#/definitions/User'
+      tags:
+        - user
+    put:
+      summary: update user data with spesific id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: User Id
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: updated user data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: '#/definitions/User'
+      tags:
+        - user
+        
+    delete:
+      summary: delete user data with spesific id
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: User Id
+      responses:
+        200:
+          description: deleted user sdata
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              message:
+                type: string
+                example: Success delete user
+      tags:
+        - user
+  
+  /schedules:
+    get:
+      summary: get all schedules
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get schedules data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Schedule'
+      tags:
+      - schedule
+    post:
+      summary: crate new schedule
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: schedule data to be added
+        schema:
+          $ref: '#/definitions/Schedule'
+      responses:
+        201:
+          description: item created
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Schedule'
+              
+        400:
+          description: invalid input, object invalid
+      tags:
+      - schedule
+  /schedules/{id}:
+    get:
+      summary: get schedule data with spesific id
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get schedule data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Schedule'
+        404:
+          description: schedule doesn't exist
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: schedule with current id doesn't exist
+      tags:
+      - schedule
+    put:
+      summary: update schedule data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success update department data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Schedule'
+              
+      tags:
+      - schedule
+    delete:
+      summary: delete schedule data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success delete schedule data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success deleted schedule data
+      tags:
+      - schedule
+  
+  /presences:
+    get:
+      summary: get all presence
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get presence data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Presence'
+      tags:
+      - presence
+    post:
+      summary: crate new presence
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: presence data to be added
+        schema:
+          $ref: '#/definitions/Presence'
+      responses:
+        201:
+          description: item created
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Presence'
+              
+        400:
+          description: invalid input, object invalid
+      tags:
+      - presence
+  /presences/{id}:
+    get:
+      summary: get presence data with spesific id
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success get schedule data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Presence'
+        404:
+          description: presence doesn't exist
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              message:
+                type: string
+                example: presence with current id doesn't exist
+      tags:
+      - presence
+    put:
+      summary: update presence data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success update presence data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              data:
+                $ref: '#/definitions/Presence'
+              
+      tags:
+      - presence
+    delete:
+      summary: delete schedule data with spesific id
+      consumes:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success delete presence data
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              message:
+                type: string
+                example: success deleted presence data
+      tags:
+      - presence
+  
+definitions:
+  User:
+    type: object
+    required:
+    - name
+    - email
+    - password
+    - dob
+    properties:
+      id:
+        type: integer
+        format: int64
+      department_id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+        format: password
+      dob:
+        type: string
+        format: date
+      
+  Department:
+    type: object
+    required:
+      - name
+      - description
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+  Schedule:
+    type: object
+    required: 
+      - department_id
+      - in_time
+      - out_time
+    properties:
+      id:
+        type: integer
+        format: int64
+      department_id:
+        type: integer
+        format: int64
+      in_time:
+        type: string
+      out_time:
+        type: string
+  Presence:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      user_id:
+        type: integer
+        format: int64
+      type:
+        type: string
+        enum:
+          - in
+          - out
+  BadPayload:
+    type: object
+    properties:
+      status:
+        type: string
+        example: failed
+      message:
+        type: string
+        example: bad data submitted
+  
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /fakhriinaufal/presence-app-api/1.0.0
+# schemes:
+#  - http
+# Added by API Auto Mocking Plugin
+schemes:
+ - https
+ - http
