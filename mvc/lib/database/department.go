@@ -1,8 +1,8 @@
 package database
 
 import (
-	"presence-app-backend/configs"
-	"presence-app-backend/models"
+	"presence-app-backend/mvc/configs"
+	"presence-app-backend/mvc/models"
 )
 
 func CreateDepartment(department *models.Department) error {

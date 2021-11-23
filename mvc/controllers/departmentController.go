@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"net/http"
-	"presence-app-backend/lib/database"
-	"presence-app-backend/models"
+	"presence-app-backend/mvc/lib/database"
+	"presence-app-backend/mvc/models"
 
 	"github.com/labstack/echo/v4"
 )
