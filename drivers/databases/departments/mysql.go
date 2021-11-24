@@ -11,7 +11,9 @@ type MysqlDepartmentRepository struct {
 }
 
 func NewMysqlDepartmentRepository(conn *gorm.DB) dpt.Repository {
-	return &MysqlDepartmentRepository{Conn: conn}
+	return &MysqlDepartmentRepository{
+		Conn: conn,
+	}
 }
 
 func (repo *MysqlDepartmentRepository) GetAll(ctx context.Context) ([]dpt.Domain, error) {
@@ -29,3 +31,14 @@ func (repo *MysqlDepartmentRepository) GetAll(ctx context.Context) ([]dpt.Domain
 	}
 	return convertedDepartment, nil
 }
+
+func (repo *MysqlDepartmentRepository) Store(ctx context.Context, department *dpt.Domain) (dpt.Domain, error) {
+	var result = FromDomain(department)
+	if err := repo.Conn.Save(&result).Error; err != nil {
+		return dpt.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}
+
+
+

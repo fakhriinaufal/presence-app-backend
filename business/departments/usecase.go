@@ -26,3 +26,11 @@ func (uc *DepartmentUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 
 	return departments, nil
 }
+
+func (uc *DepartmentUsecase) Store(ctx context.Context, department *Domain) (Domain, error) {
+	result, err := uc.Repo.Store(ctx, department)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}

@@ -24,3 +24,13 @@ func (department *Department) ToDomain() departments.Domain {
 		UpdatedAt:   department.UpdatedAt,
 	}
 }
+
+func FromDomain(department *departments.Domain) Department {
+	return Department{
+		Id:          department.ID,
+		Name:        department.Name,
+		Description: department.Description,
+		CreatedAt: department.CreatedAt,
+		UpdatedAt: department.UpdatedAt,
+	}
+}
