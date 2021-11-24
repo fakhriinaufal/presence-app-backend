@@ -93,3 +93,27 @@ func (d DepartmentController) GetById(c echo.Context) error {
 		"department": result,
 	})
 }
+
+func (d DepartmentController) Update(c echo.Context) error {
+	var department requests.DepartmentStore
+	id, _ := strconv.Atoi(c.Param("id"))
+	ctx := c.Request().Context()
+
+	c.Bind(&department)
+
+	isValid, err := isDepartmentStoreValid(&department)
+
+	if !isValid {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	dept, err := d.DepartmentUsecase.Update(ctx, department.ToDomain(), id)
+
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"department": dept,
+	})
+}
