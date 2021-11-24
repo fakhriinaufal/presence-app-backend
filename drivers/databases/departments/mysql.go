@@ -61,7 +61,14 @@ func (repo *MysqlDepartmentRepository) Update(ctx context.Context, department dp
 	}
 
 	return departmentFromDb.ToDomain(), nil
+}
 
+func (repo *MysqlDepartmentRepository) Delete(ctx context.Context, id int) error {
+	err := repo.Conn.Delete(&Department{}, id).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 

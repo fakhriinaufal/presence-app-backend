@@ -117,3 +117,16 @@ func (d DepartmentController) Update(c echo.Context) error {
 		"department": dept,
 	})
 }
+
+func (d DepartmentController) Delete(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	ctx := c.Request().Context()
+	err := d.DepartmentUsecase.Delete(ctx, id)
+
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
+	}
+
+	return controllers.NewSuccessResponse(c, map[string]interface{}{})
+}

@@ -54,3 +54,11 @@ func (uc *DepartmentUsecase) Update(ctx context.Context, department Domain, id i
 	}
 	return result, nil
 }
+
+func (uc *DepartmentUsecase) Delete(ctx context.Context, id int) error {
+	err := uc.Repo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

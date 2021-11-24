@@ -14,4 +14,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	e.POST("departments", cl.DepartmentController.Store)
 	e.GET("departments/:id", cl.DepartmentController.GetById)
 	e.PUT("departments/:id", cl.DepartmentController.Update)
+	e.DELETE("departments/:id", cl.DepartmentController.Delete)
 }
