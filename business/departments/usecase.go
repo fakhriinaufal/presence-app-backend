@@ -10,6 +10,7 @@ type DepartmentUsecase struct {
 	contextTimeout time.Duration
 }
 
+
 func NewDepartmentUsecase(repo Repository, timeout time.Duration) Usecase {
 	return &DepartmentUsecase{
 		repo,
@@ -32,5 +33,15 @@ func (uc *DepartmentUsecase) Store(ctx context.Context, department *Domain) (Dom
 	if err != nil {
 		return result, err
 	}
+	return result, nil
+}
+
+func (uc *DepartmentUsecase) GetById(ctx context.Context, id int) (Domain, error) {
+	result, err := uc.Repo.GetById(ctx, id)
+
+	if err != nil {
+		return Domain{}, err
+	}
+
 	return result, nil
 }

@@ -16,9 +16,11 @@ type Domain struct {
 type Usecase interface {
 	GetAll(ctx context.Context) ([]Domain, error)
 	Store(ctx context.Context, department *Domain) (Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 }
 
 type Repository interface {
 	GetAll(ctx context.Context) ([]Domain, error)
 	Store(ctx context.Context, department *Domain) (Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 }

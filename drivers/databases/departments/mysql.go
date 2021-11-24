@@ -40,5 +40,14 @@ func (repo *MysqlDepartmentRepository) Store(ctx context.Context, department *dp
 	return result.ToDomain(), nil
 }
 
+func (repo *MysqlDepartmentRepository) GetById(ctx context.Context, id int) (dpt.Domain, error) {
+	var department Department
+
+	if err := repo.Conn.First(&department, id).Error; err != nil {
+			return dpt.Domain{}, err
+	}
+	return department.ToDomain(), nil
+}
+
 
 

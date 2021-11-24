@@ -8,6 +8,7 @@ import (
 	"presence-app-backend/controllers"
 	"presence-app-backend/controllers/departments/requests"
 	"presence-app-backend/controllers/departments/responses"
+	"strconv"
 )
 
 type DepartmentController struct {
@@ -78,4 +79,17 @@ func (d DepartmentController) Store(c echo.Context) error {
 		map[string]interface{}{
 			"department": dept,
 		})
+}
+
+func (d DepartmentController) GetById(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	ctx := c.Request().Context()
+	result, err := d.DepartmentUsecase.GetById(ctx, id)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
+	}
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"department": result,
+	})
 }

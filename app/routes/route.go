@@ -12,4 +12,5 @@ type ControllerList struct {
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	e.GET("departments", cl.DepartmentController.GetAll)
 	e.POST("departments", cl.DepartmentController.Store)
+	e.GET("departments/:id", cl.DepartmentController.GetById)
 }
