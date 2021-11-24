@@ -3,12 +3,11 @@ package configs
 import (
 	"fmt"
 	"os"
+	models2 "presence-app-backend/mvc/models"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-
-	"presence-app-backend/models"
 )
 
 var DB *gorm.DB
@@ -41,9 +40,9 @@ func InitDB() {
 }
 
 func InitMigrate() {
-	DB.AutoMigrate(&models.Department{})
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Schedule{})
-	DB.AutoMigrate(&models.Presence{})
+	DB.AutoMigrate(&models2.Department{})
+	DB.AutoMigrate(&models2.User{})
+	DB.AutoMigrate(&models2.Schedule{})
+	DB.AutoMigrate(&models2.Presence{})
 
 }
