@@ -2,7 +2,7 @@ package routes
 
 import (
 	"net/http"
-	c "presence-app-backend/controllers"
+	c "presence-app-backend/mvc/controllers"
 
 	"github.com/labstack/echo/v4"
 )
