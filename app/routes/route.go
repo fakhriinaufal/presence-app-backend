@@ -29,4 +29,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	schedules := e.Group("schedules")
 	schedules.POST("", cl.ScheduleController.Store)
+	schedules.GET("", cl.ScheduleController.GetAll)
 }

@@ -32,5 +32,21 @@ func (ctrl *ScheduleController) Store(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return controllers.NewSuccessCreatedResponse(c, responses.FromDomain(&response))
+	return controllers.NewSuccessCreatedResponse(c, responses.FromDomain(response))
+}
+
+func (ctrl *ScheduleController) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	resp, err := ctrl.scheduleUsecase.GetAll(ctx)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	var result []responses.Schedule
+	for _, val := range resp {
+		result = append(result, responses.FromDomain(val))
+	}
+
+	return controllers.NewSuccessResponse(c, result)
 }

@@ -32,3 +32,11 @@ func (su scheduleUsecase) Store(ctx context.Context, domain *Domain) (Domain, er
 	}
 	return result, nil
 }
+
+func (su scheduleUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	schedules, err := su.scheduleRepository.GetAll(ctx)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return schedules, nil
+}

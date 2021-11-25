@@ -23,3 +23,16 @@ func (repo *MysqlScheduleRepository) Store(ctx context.Context, domain *schedule
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlScheduleRepository) GetAll(ctx context.Context) ([]schedules.Domain, error) {
+	var schedulesFromDB []Schedule
+	if err := repo.Conn.Find(&schedulesFromDB).Error; err != nil {
+		return []schedules.Domain{}, err
+	}
+
+	var result []schedules.Domain
+	for _, val := range schedulesFromDB {
+		result = append(result, val.ToDomain())
+	}
+	return result, nil
+}
