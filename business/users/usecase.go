@@ -1,21 +1,52 @@
 package users
 
-import "time"
+import (
+	"context"
+	"errors"
+	"presence-app-backend/business/departments"
+	"time"
+)
 
 type UserUsecase struct {
 	Repo Repository
+	DeptRepo departments.Repository
 	contextTimeout time.Duration
 }
 
-func NewUserUsecase(repo Repository, timeout time.Duration) Usecase {
+func NewUserUsecase(repo Repository, deptRepo departments.Repository, timeout time.Duration) Usecase {
 	return &UserUsecase{
 		Repo: repo,
+		DeptRepo: deptRepo,
 		contextTimeout: timeout,
 	}
 }
 
-func (u UserUsecase) Store(domain *Domain) (Domain, error) {
-	user, err := u.Repo.Store(domain)
+func (uc UserUsecase) Store(ctx context.Context, domain *Domain) (Domain, error) {
+	_, err := uc.DeptRepo.GetById(ctx, domain.DepartmentId)
+
+	if err != nil {
+		return Domain{}, errors.New("department not found")
+	}
+
+	user, err := uc.Repo.Store(ctx, domain)
+	if err != nil {
+		return Domain{}, err
+	}
+	return user, nil
+}
+
+func (uc UserUsecase) GetAll() ([]Domain, error) {
+	usersFromRepo, err := uc.Repo.GetAll()
+
+	if err != nil {
+		return []Domain{}, err
+	}
+
+	return usersFromRepo, err
+}
+
+func (uc UserUsecase) GetById(ctx context.Context, id int) (Domain, error) {
+	user, err := uc.Repo.GetById(ctx, id)
 	if err != nil {
 		return Domain{}, err
 	}

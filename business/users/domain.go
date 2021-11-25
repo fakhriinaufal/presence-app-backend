@@ -1,6 +1,9 @@
 package users
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Domain struct {
 	Id int
@@ -14,9 +17,13 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Store(domain *Domain) (Domain, error)
+	Store(ctx context.Context, domain *Domain) (Domain, error)
+	GetAll() ([]Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 }
 
 type Repository interface {
-	Store(domain *Domain) (Domain, error)
+	Store(ctx context.Context, domain *Domain) (Domain, error)
+	GetAll() ([]Domain, error)
+	GetById(ctx context.Context, id int) (Domain, error)
 }

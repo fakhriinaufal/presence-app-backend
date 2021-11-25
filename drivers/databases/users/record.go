@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Users struct {
+type User struct {
 	Id int
 	DepartmentId int
 	Name string
@@ -18,7 +18,7 @@ type Users struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (u *Users) ToDomain() users.Domain {
+func (u *User) ToDomain() users.Domain {
 	return users.Domain{
 		u.Id,
 		u.DepartmentId,
@@ -31,8 +31,8 @@ func (u *Users) ToDomain() users.Domain {
 	}
 }
 
-func FromDomain(u *users.Domain) Users {
-	return Users{
+func FromDomain(u *users.Domain) User {
+	return User{
 		Id:           u.Id,
 		DepartmentId: u.DepartmentId,
 		Name:         u.Name,
@@ -42,4 +42,14 @@ func FromDomain(u *users.Domain) Users {
 		CreatedAt:    u.CreatedAt,
 		UpdatedAt:    u.UpdatedAt,
 	}
+}
+
+func ToArrayOfDomain(u *[]User) []users.Domain {
+	var result []users.Domain
+
+	for _, val := range *u {
+		result = append(result, val.ToDomain())
+	}
+
+	return result
 }

@@ -25,7 +25,7 @@ func init() {
 
 func DbMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_departmentRepo.Department{})
-	db.AutoMigrate(&_userRepo.Users{})
+	db.AutoMigrate(&_userRepo.User{})
 }
 
 func main() {
@@ -49,7 +49,7 @@ func main() {
 
 	// _userRepo route
 	userRepository := _userRepo.NewMysqlUserRepository(conn)
-	userUsecase := _userUsecase.NewUserUsecase(userRepository, timeoutContext)
+	userUsecase := _userUsecase.NewUserUsecase(userRepository, departmentRepository,timeoutContext)
 	userController := _userController.NewUserController(userUsecase)
 
 	routeInit := routes.ControllerList{

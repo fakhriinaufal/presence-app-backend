@@ -15,7 +15,7 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (u *UserResponse) FromDomain() users.Domain {
+func (u *UserResponse) ToDomain() users.Domain {
 	return users.Domain{
 		Id:           u.Id,
 		DepartmentId: u.DepartmentId,
@@ -25,4 +25,26 @@ func (u *UserResponse) FromDomain() users.Domain {
 		CreatedAt:    u.CreatedAt,
 		UpdatedAt:    u.UpdatedAt,
 	}
+}
+
+func FromDomain(u users.Domain) UserResponse {
+	return UserResponse{
+		Id:           u.Id,
+		DepartmentId: u.DepartmentId,
+		Name:         u.Name,
+		Email:        u.Email,
+		Dob:          u.Dob,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
+	}
+}
+
+func ToResponseList(domains *[]users.Domain) []UserResponse {
+	var result []UserResponse
+
+	for _, val := range *domains {
+		result = append(result, FromDomain(val))
+	}
+
+	return result
 }
