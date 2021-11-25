@@ -20,10 +20,12 @@ type Usecase interface {
 	Store(ctx context.Context, domain *Domain) (Domain, error)
 	GetAll() ([]Domain, error)
 	GetById(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, domain *Domain, id int) (Domain, error)
 }
 
 type Repository interface {
 	Store(ctx context.Context, domain *Domain) (Domain, error)
 	GetAll() ([]Domain, error)
 	GetById(ctx context.Context, id int) (Domain, error)
+	Update(ctx context.Context, domain *Domain) (Domain, error)
 }

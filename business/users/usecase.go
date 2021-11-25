@@ -52,3 +52,23 @@ func (uc UserUsecase) GetById(ctx context.Context, id int) (Domain, error) {
 	}
 	return user, nil
 }
+
+func (uc UserUsecase) Update(ctx context.Context, domain *Domain, id int) (Domain, error) {
+	existedUser, err := uc.Repo.GetById(ctx, id)
+
+	if err != nil {
+		return Domain{}, err
+	}
+
+	domain.Id = existedUser.Id
+	domain.CreatedAt = existedUser.UpdatedAt
+
+	result, err := uc.Repo.Update(ctx, domain)
+
+	if err != nil {
+		return Domain{}, err
+	}
+
+	return result, nil
+
+}

@@ -72,3 +72,25 @@ func (controller UserController) GetById(c echo.Context) error {
 		"user": userFromUsecase,
 	})
 }
+
+func (controller UserController) Update(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	ctx := c.Request().Context()
+	var payload request.UserPayload
+	err := c.Bind(&payload)
+
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	domainReq := payload.ToDomain()
+	result, err := controller.UserUsecase.Update(ctx, &domainReq, id)
+
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.NewSuccessResponse(c, responses.FromDomain(result))
+
+
+}

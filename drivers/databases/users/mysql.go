@@ -45,6 +45,15 @@ func (m MysqlUserRepository) GetById(ctx context.Context, id int) (users.Domain,
 	}
 
 	return user.ToDomain(), nil
+}
+
+func (m MysqlUserRepository) Update(ctx context.Context, domain *users.Domain) (users.Domain, error) {
+	user := FromDomain(domain)
+	if err := m.Conn.Save(&user).Error; err != nil {
+		return users.Domain{}, err
+	}
+
+	return user.ToDomain(), nil
 
 }
 
