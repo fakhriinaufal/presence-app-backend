@@ -3,12 +3,14 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 	"presence-app-backend/controllers/departments"
+	"presence-app-backend/controllers/schedules"
 	"presence-app-backend/controllers/users"
 )
 
 type ControllerList struct {
 	DepartmentController departments.DepartmentController
 	UserController users.UserController
+	ScheduleController schedules.ScheduleController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -24,4 +26,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	users.GET("/:id", cl.UserController.GetById)
 	users.PUT("/:id", cl.UserController.Update)
 	users.DELETE("/:id", cl.UserController.Delete)
+
+	schedules := e.Group("schedules")
+	schedules.POST("", cl.ScheduleController.Store)
 }

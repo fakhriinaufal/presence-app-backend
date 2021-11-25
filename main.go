@@ -7,11 +7,14 @@ import (
 	"log"
 	"presence-app-backend/app/routes"
 	_departmentUsecase "presence-app-backend/business/departments"
+	_scheduleUsecase "presence-app-backend/business/schedules"
 	_userUsecase "presence-app-backend/business/users"
 	_departmentController "presence-app-backend/controllers/departments"
+	_scheduleController "presence-app-backend/controllers/schedules"
 	_userController "presence-app-backend/controllers/users"
 	_departmentRepo "presence-app-backend/drivers/databases/departments"
 	"presence-app-backend/drivers/databases/mysql"
+	_scheduleRepo "presence-app-backend/drivers/databases/schedules"
 	_userRepo "presence-app-backend/drivers/databases/users"
 	"time"
 )
@@ -26,6 +29,7 @@ func init() {
 func DbMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_departmentRepo.Department{})
 	db.AutoMigrate(&_userRepo.User{})
+	db.AutoMigrate(&_scheduleRepo.Schedule{})
 }
 
 func main() {
@@ -52,9 +56,16 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepository, departmentRepository,timeoutContext)
 	userController := _userController.NewUserController(userUsecase)
 
+
+	// schedule route
+	scheduleRepository := _scheduleRepo.NewMysqlScheduleRepository(conn)
+	scheduleUsecase := _scheduleUsecase.NewScheduleUsecase(scheduleRepository, departmentRepository, timeoutContext)
+	scheduleController := _scheduleController.NewScheduleController(scheduleUsecase)
+
 	routeInit := routes.ControllerList{
 		DepartmentController: *departmentController,
 		UserController: *userController,
+		ScheduleController: *scheduleController,
 	}
 
 	routeInit.RouteRegister(e)
