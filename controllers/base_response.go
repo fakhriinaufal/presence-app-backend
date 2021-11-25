@@ -22,6 +22,15 @@ func NewSuccessResponse(c echo.Context, data interface{}) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+func NewSuccessCreatedResponse(c echo.Context, data interface{}) error {
+	response := BaseResponse{}
+	response.Meta.Status = http.StatusCreated
+	response.Meta.Message = "Success"
+	response.Data = data
+
+	return c.JSON(http.StatusOK, response)
+}
+
 func NewErrorResponse(c echo.Context, code int, err error) error {
 	response := BaseResponse{}
 	response.Meta.Status = code

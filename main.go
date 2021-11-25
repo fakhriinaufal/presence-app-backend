@@ -7,9 +7,12 @@ import (
 	"log"
 	"presence-app-backend/app/routes"
 	_departmentUsecase "presence-app-backend/business/departments"
+	_userUsecase "presence-app-backend/business/users"
 	_departmentController "presence-app-backend/controllers/departments"
+	_userController "presence-app-backend/controllers/users"
 	_departmentRepo "presence-app-backend/drivers/databases/departments"
 	"presence-app-backend/drivers/databases/mysql"
+	_userRepo "presence-app-backend/drivers/databases/users"
 	"time"
 )
 
@@ -22,6 +25,7 @@ func init() {
 
 func DbMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_departmentRepo.Department{})
+	db.AutoMigrate(&_userRepo.Users{})
 }
 
 func main() {
@@ -43,8 +47,14 @@ func main() {
 	departmentUsecase := _departmentUsecase.NewDepartmentUsecase(departmentRepository, timeoutContext)
 	departmentController := _departmentController.NewDepartmentController(departmentUsecase)
 
+	// _userRepo route
+	userRepository := _userRepo.NewMysqlUserRepository(conn)
+	userUsecase := _userUsecase.NewUserUsecase(userRepository, timeoutContext)
+	userController := _userController.NewUserController(userUsecase)
+
 	routeInit := routes.ControllerList{
 		DepartmentController: *departmentController,
+		UserController: *userController,
 	}
 
 	routeInit.RouteRegister(e)
