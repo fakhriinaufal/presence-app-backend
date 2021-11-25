@@ -91,6 +91,15 @@ func (controller UserController) Update(c echo.Context) error {
 	}
 
 	return controllers.NewSuccessResponse(c, responses.FromDomain(result))
+}
+func (controller UserController) Delete(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	ctx := c.Request().Context()
 
+	err := controller.UserUsecase.Delete(ctx, id)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
 
+	return controllers.NewSuccessResponse(c, []int{})
 }

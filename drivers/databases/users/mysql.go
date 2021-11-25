@@ -54,6 +54,12 @@ func (m MysqlUserRepository) Update(ctx context.Context, domain *users.Domain) (
 	}
 
 	return user.ToDomain(), nil
-
 }
 
+func (m MysqlUserRepository) Delete(ctx context.Context, id int) error {
+	err := m.Conn.Delete(&User{}, id).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

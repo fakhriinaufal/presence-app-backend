@@ -8,15 +8,15 @@ import (
 )
 
 type UserUsecase struct {
-	Repo Repository
-	DeptRepo departments.Repository
+	Repo           Repository
+	DeptRepo       departments.Repository
 	contextTimeout time.Duration
 }
 
 func NewUserUsecase(repo Repository, deptRepo departments.Repository, timeout time.Duration) Usecase {
 	return &UserUsecase{
-		Repo: repo,
-		DeptRepo: deptRepo,
+		Repo:           repo,
+		DeptRepo:       deptRepo,
 		contextTimeout: timeout,
 	}
 }
@@ -71,4 +71,16 @@ func (uc UserUsecase) Update(ctx context.Context, domain *Domain, id int) (Domai
 
 	return result, nil
 
+}
+
+func (uc UserUsecase) Delete(ctx context.Context, id int) error {
+	_, err := uc.Repo.GetById(ctx, id)
+	if err != nil {
+		return err
+	}
+	err = uc.Repo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
