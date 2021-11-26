@@ -32,4 +32,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	schedules.GET("", cl.ScheduleController.GetAll)
 	schedules.GET("/:id", cl.ScheduleController.GetById)
 	schedules.PUT("/:id", cl.ScheduleController.Update)
+	schedules.DELETE("/:id", cl.ScheduleController.Delete)
 }

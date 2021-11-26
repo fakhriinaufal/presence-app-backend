@@ -85,3 +85,14 @@ func (ctrl *ScheduleController) Update(c echo.Context) error {
 		"schedule": responses.FromDomain(result),
 	})
 }
+
+func (ctrl *ScheduleController) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	err := ctrl.scheduleUsecase.Delete(ctx ,id)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
+	}
+	return controllers.NewSuccessResponse(c, []int{})
+}

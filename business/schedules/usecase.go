@@ -63,3 +63,12 @@ func (su scheduleUsecase) Update(ctx context.Context, domain *Domain) (Domain, e
 	}
 	return result, nil
 }
+
+func (su scheduleUsecase) Delete(ctx context.Context, id int) error {
+	// check is schedule with provided id isExisted
+	_, err := su.scheduleRepository.GetById(ctx, id)
+	if err != nil {
+		return err
+	}
+	return su.scheduleRepository.Delete(ctx, id)
+}

@@ -52,3 +52,7 @@ func (repo *MysqlScheduleRepository) Update(ctx context.Context, domain *schedul
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlScheduleRepository) Delete(ctx context.Context, id int) error {
+	return repo.Conn.Delete(&Schedule{}, id).Error
+}
