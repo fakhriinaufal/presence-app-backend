@@ -64,3 +64,24 @@ func (ctrl *ScheduleController) GetById(c echo.Context) error {
 		"schedule": responses.FromDomain(resp),
 	})
 }
+
+func (ctrl *ScheduleController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+	payload := requests.Schedule{}
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if err := c.Bind(&payload); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	reqDomain := payload.ToDomain()
+	reqDomain.Id = id
+	result, err := ctrl.scheduleUsecase.Update(ctx, reqDomain)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"schedule": responses.FromDomain(result),
+	})
+}

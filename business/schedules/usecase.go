@@ -48,3 +48,18 @@ func (su scheduleUsecase) GetById(ctx context.Context, id int) (Domain, error) {
 	}
 	return result, nil
 }
+
+func (su scheduleUsecase) Update(ctx context.Context, domain *Domain) (Domain, error) {
+	existedSchedule, err := su.scheduleRepository.GetById(ctx, domain.Id)
+	if err != nil {
+		return Domain{}, err
+	}
+
+	domain.CreatedAt = existedSchedule.CreatedAt
+
+	result, err := su.scheduleRepository.Update(ctx, domain)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
+}

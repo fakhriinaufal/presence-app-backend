@@ -44,3 +44,11 @@ func (repo *MysqlScheduleRepository) GetById(ctx context.Context, id int) (sched
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlScheduleRepository) Update(ctx context.Context, domain *schedules.Domain) (schedules.Domain, error) {
+	result := FromDomain(domain)
+	if err := repo.Conn.Save(&result).Error; err != nil {
+		return schedules.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}
