@@ -7,6 +7,7 @@ import (
 	"presence-app-backend/controllers"
 	"presence-app-backend/controllers/schedules/requests"
 	"presence-app-backend/controllers/schedules/responses"
+	"strconv"
 )
 
 type ScheduleController struct {
@@ -49,4 +50,17 @@ func (ctrl *ScheduleController) GetAll(c echo.Context) error {
 	}
 
 	return controllers.NewSuccessResponse(c, result)
+}
+
+func (ctrl *ScheduleController) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	resp, err := ctrl.scheduleUsecase.GetById(ctx, id)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
+	}
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"schedule": responses.FromDomain(resp),
+	})
 }

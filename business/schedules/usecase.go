@@ -40,3 +40,11 @@ func (su scheduleUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 	}
 	return schedules, nil
 }
+
+func (su scheduleUsecase) GetById(ctx context.Context, id int) (Domain, error) {
+	result, err := su.scheduleRepository.GetById(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
+}

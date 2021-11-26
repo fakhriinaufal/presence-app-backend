@@ -36,3 +36,11 @@ func (repo *MysqlScheduleRepository) GetAll(ctx context.Context) ([]schedules.Do
 	}
 	return result, nil
 }
+
+func (repo *MysqlScheduleRepository) GetById(ctx context.Context, id int) (schedules.Domain, error) {
+	var result Schedule
+	if err := repo.Conn.Find(&result, id).Error; err != nil {
+		return schedules.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}
