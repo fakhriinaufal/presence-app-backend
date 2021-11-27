@@ -3,34 +3,45 @@ package routes
 import (
 	"github.com/labstack/echo/v4"
 	"presence-app-backend/controllers/departments"
+	"presence-app-backend/controllers/presences"
 	"presence-app-backend/controllers/schedules"
 	"presence-app-backend/controllers/users"
 )
 
 type ControllerList struct {
 	DepartmentController departments.DepartmentController
-	UserController users.UserController
-	ScheduleController schedules.ScheduleController
+	UserController       users.UserController
+	ScheduleController   schedules.ScheduleController
+	PresenceController   presences.PresenceController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	e.GET("departments", cl.DepartmentController.GetAll)
-	e.POST("departments", cl.DepartmentController.Store)
-	e.GET("departments/:id", cl.DepartmentController.GetById)
-	e.PUT("departments/:id", cl.DepartmentController.Update)
-	e.DELETE("departments/:id", cl.DepartmentController.Delete)
 
-	users := e.Group("users")
-	users.POST("", cl.UserController.Store)
-	users.GET("", cl.UserController.GetAll)
-	users.GET("/:id", cl.UserController.GetById)
-	users.PUT("/:id", cl.UserController.Update)
-	users.DELETE("/:id", cl.UserController.Delete)
+	departmentRoute := e.Group("departments")
+	departmentRoute.GET("", cl.DepartmentController.GetAll)
+	departmentRoute.POST("", cl.DepartmentController.Store)
+	departmentRoute.GET("/:id", cl.DepartmentController.GetById)
+	departmentRoute.PUT("/:id", cl.DepartmentController.Update)
+	departmentRoute.DELETE("/:id", cl.DepartmentController.Delete)
 
-	schedules := e.Group("schedules")
-	schedules.POST("", cl.ScheduleController.Store)
-	schedules.GET("", cl.ScheduleController.GetAll)
-	schedules.GET("/:id", cl.ScheduleController.GetById)
-	schedules.PUT("/:id", cl.ScheduleController.Update)
-	schedules.DELETE("/:id", cl.ScheduleController.Delete)
+	userRoute := e.Group("userRoute")
+	userRoute.POST("", cl.UserController.Store)
+	userRoute.GET("", cl.UserController.GetAll)
+	userRoute.GET("/:id", cl.UserController.GetById)
+	userRoute.PUT("/:id", cl.UserController.Update)
+	userRoute.DELETE("/:id", cl.UserController.Delete)
+
+	scheduleRoute := e.Group("schedules")
+	scheduleRoute.POST("", cl.ScheduleController.Store)
+	scheduleRoute.GET("", cl.ScheduleController.GetAll)
+	scheduleRoute.GET("/:id", cl.ScheduleController.GetById)
+	scheduleRoute.PUT("/:id", cl.ScheduleController.Update)
+	scheduleRoute.DELETE("/:id", cl.ScheduleController.Delete)
+
+	presenceRoute := e.Group("presences")
+	presenceRoute.POST("", cl.PresenceController.Store)
+	presenceRoute.GET("", cl.PresenceController.GetAll)
+	presenceRoute.GET("/:id", cl.PresenceController.GetById)
+	presenceRoute.PUT("/:id", cl.PresenceController.Update)
+	presenceRoute.DELETE("/:id", cl.PresenceController.Delete)
 }
