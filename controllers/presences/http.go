@@ -90,3 +90,13 @@ func (ctrl *PresenceController) Update(c echo.Context) error {
 		"presence": responses.FromDomain(result),
 	})
 }
+
+func (ctrl *PresenceController) Delete(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if err := ctrl.presenceUsecase.Delete(ctx, id); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+	return controllers.NewSuccessResponse(c, []int{})
+}

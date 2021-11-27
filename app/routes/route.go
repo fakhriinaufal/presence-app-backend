@@ -43,4 +43,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	presenceRoute.GET("", cl.PresenceController.GetAll)
 	presenceRoute.GET("/:id", cl.PresenceController.GetById)
 	presenceRoute.PUT("/:id", cl.PresenceController.Update)
+	presenceRoute.DELETE("/:id", cl.PresenceController.Delete)
 }

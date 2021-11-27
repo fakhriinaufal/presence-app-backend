@@ -51,3 +51,10 @@ func (repo *MysqlPresenceRepository) Update(ctx context.Context, domain *presenc
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlPresenceRepository) Delete(ctx context.Context, id int) error {
+	if err := repo.Conn.Delete(&Presence{}, id).Error; err != nil {
+		return err
+	}
+	return nil
+}

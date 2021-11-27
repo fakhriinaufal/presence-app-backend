@@ -114,3 +114,17 @@ func (pu presenceUsecase) Update(ctx context.Context, domain *Domain) (Domain, e
 	}
 	return result, nil
 }
+
+func (pu presenceUsecase) Delete(ctx context.Context, id int) error {
+	// check is presence exist
+	_, err := pu.repo.GetById(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	err = pu.repo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
