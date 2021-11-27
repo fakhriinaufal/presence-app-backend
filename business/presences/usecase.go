@@ -84,5 +84,12 @@ func (pu presenceUsecase) Store(ctx context.Context, domain *Domain) (Domain, er
 		return Domain{}, err
 	}
 	return result, nil
+}
 
+func (pu presenceUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	result, err := pu.repo.GetAll(ctx)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return result, nil
 }

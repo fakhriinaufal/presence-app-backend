@@ -19,7 +19,7 @@ func NewPresenceController(presenceUC presences.Usecase) *PresenceController {
 	}
 }
 
-func (ctrl *PresenceController) Create(c echo.Context) error {
+func (ctrl *PresenceController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	req := requests.Presence{}
@@ -34,5 +34,24 @@ func (ctrl *PresenceController) Create(c echo.Context) error {
 	}
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
 		"presence": responses.FromDomain(response),
+	})
+}
+
+func (ctrl *PresenceController) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	result, err := ctrl.presenceUsecase.GetAll(ctx)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	var response []responses.Presence
+
+	for _, val := range result {
+		response = append(response, responses.FromDomain(val))
+	}
+
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"presences": response,
 	})
 }

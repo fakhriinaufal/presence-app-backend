@@ -17,8 +17,10 @@ type Domain struct {
 
 type Usecase interface {
 	Store(ctx context.Context, domain *Domain) (Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 }
 
 type Repository interface {
 	Store(ctx context.Context, domain *Domain) (Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 }

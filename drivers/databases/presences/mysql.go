@@ -23,3 +23,15 @@ func (repo *MysqlPresenceRepository) Store(ctx context.Context, domain *presence
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlPresenceRepository) GetAll(ctx context.Context) ([]presences.Domain, error) {
+	var result []Presence
+	if err := repo.Conn.Find(&result).Error; err != nil {
+		return []presences.Domain{}, err
+	}
+	var domainResult []presences.Domain
+	for _, val := range result {
+		domainResult = append(domainResult, val.ToDomain())
+	}
+	return domainResult, nil
+}

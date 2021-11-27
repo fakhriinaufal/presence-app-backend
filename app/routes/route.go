@@ -39,5 +39,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	scheduleRoute.DELETE("/:id", cl.ScheduleController.Delete)
 
 	presenceRoute := e.Group("presences")
-	presenceRoute.POST("", cl.PresenceController.Create)
+	presenceRoute.POST("", cl.PresenceController.Store)
+	presenceRoute.GET("", cl.PresenceController.GetAll)
 }
