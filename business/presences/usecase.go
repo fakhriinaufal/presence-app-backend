@@ -93,3 +93,11 @@ func (pu presenceUsecase) GetAll(ctx context.Context) ([]Domain, error) {
 	}
 	return result, nil
 }
+
+func (pu presenceUsecase) GetById(ctx context.Context, id int) (Domain, error) {
+	result, err := pu.repo.GetById(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
+}

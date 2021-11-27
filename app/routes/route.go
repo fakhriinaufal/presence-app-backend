@@ -41,4 +41,5 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	presenceRoute := e.Group("presences")
 	presenceRoute.POST("", cl.PresenceController.Store)
 	presenceRoute.GET("", cl.PresenceController.GetAll)
+	presenceRoute.GET("/:id", cl.PresenceController.GetById)
 }

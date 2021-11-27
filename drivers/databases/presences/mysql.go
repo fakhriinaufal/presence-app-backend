@@ -35,3 +35,11 @@ func (repo *MysqlPresenceRepository) GetAll(ctx context.Context) ([]presences.Do
 	}
 	return domainResult, nil
 }
+
+func (repo *MysqlPresenceRepository) GetById(ctx context.Context, id int) (presences.Domain, error) {
+	var result Presence
+	if err := repo.Conn.First(&result, id).Error; err != nil {
+		return presences.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}

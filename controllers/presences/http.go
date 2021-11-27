@@ -7,6 +7,7 @@ import (
 	"presence-app-backend/controllers"
 	"presence-app-backend/controllers/presences/requests"
 	"presence-app-backend/controllers/presences/responses"
+	"strconv"
 )
 
 type PresenceController struct {
@@ -53,5 +54,18 @@ func (ctrl *PresenceController) GetAll(c echo.Context) error {
 
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
 		"presences": response,
+	})
+}
+
+func (ctrl *PresenceController) GetById(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	result, err := ctrl.presenceUsecase.GetById(ctx, id)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"presence": responses.FromDomain(result),
 	})
 }
