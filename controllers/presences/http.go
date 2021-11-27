@@ -69,3 +69,24 @@ func (ctrl *PresenceController) GetById(c echo.Context) error {
 		"presence": responses.FromDomain(result),
 	})
 }
+
+func (ctrl *PresenceController) Update(c echo.Context) error {
+	ctx := c.Request().Context()
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	var presenceRequest requests.PresenceUpdate
+	if err := c.Bind(&presenceRequest); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	presenceDomain := presenceRequest.ToDomain()
+	presenceDomain.Id = id
+
+	result, err := ctrl.presenceUsecase.Update(ctx, presenceDomain)
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"presence": responses.FromDomain(result),
+	})
+}

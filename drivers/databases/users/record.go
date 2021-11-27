@@ -7,27 +7,27 @@ import (
 )
 
 type User struct {
-	Id int
+	Id           int
 	DepartmentId int
-	Name string
-	Email string
-	Password string
-	Dob string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Name         string
+	Email        string
+	Password     string
+	Dob          string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
 }
 
 func (u *User) ToDomain() users.Domain {
 	return users.Domain{
-		u.Id,
-		u.DepartmentId,
-		u.Name,
-		u.Email,
-		u.Password,
-		u.Dob,
-		u.CreatedAt,
-		u.UpdatedAt,
+		Id:           u.Id,
+		DepartmentId: u.DepartmentId,
+		Name:         u.Name,
+		Email:        u.Email,
+		Password:     u.Password,
+		Dob:          u.Dob,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
 	}
 }
 

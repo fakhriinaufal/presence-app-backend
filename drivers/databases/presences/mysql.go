@@ -43,3 +43,11 @@ func (repo *MysqlPresenceRepository) GetById(ctx context.Context, id int) (prese
 	}
 	return result.ToDomain(), nil
 }
+
+func (repo *MysqlPresenceRepository) Update(ctx context.Context, domain *presences.Domain) (presences.Domain, error) {
+	result := FromDomain(domain)
+	if err := repo.Conn.Save(&result).Error; err != nil {
+		return presences.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}

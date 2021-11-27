@@ -101,3 +101,16 @@ func (pu presenceUsecase) GetById(ctx context.Context, id int) (Domain, error) {
 	}
 	return result, nil
 }
+
+func (pu presenceUsecase) Update(ctx context.Context, domain *Domain) (Domain, error) {
+	existedPresence, err := pu.repo.GetById(ctx, domain.Id)
+	if err != nil {
+		return Domain{}, err
+	}
+	domain.CreatedAt = existedPresence.UpdatedAt
+	result, err := pu.repo.Update(ctx, domain)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
+}
