@@ -6,14 +6,15 @@ import (
 )
 
 type Domain struct {
-	Id int
+	Id           int
 	DepartmentId int
-	Name string
-	Email string
-	Password string
-	Dob string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	Name         string
+	Email        string
+	Password     string
+	Dob          string
+	Token        string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type Usecase interface {
@@ -22,6 +23,7 @@ type Usecase interface {
 	GetById(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, domain *Domain, id int) (Domain, error)
 	Delete(ctx context.Context, id int) error
+	Login(ctx context.Context, domain *Domain) (Domain, error)
 }
 
 type Repository interface {
@@ -30,4 +32,5 @@ type Repository interface {
 	GetById(ctx context.Context, id int) (Domain, error)
 	Update(ctx context.Context, domain *Domain) (Domain, error)
 	Delete(ctx context.Context, id int) error
+	GetByEmail(ctx context.Context, domain *Domain) (Domain, error)
 }

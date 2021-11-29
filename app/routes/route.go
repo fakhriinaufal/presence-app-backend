@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"presence-app-backend/controllers/departments"
 	"presence-app-backend/controllers/presences"
 	"presence-app-backend/controllers/schedules"
@@ -9,6 +10,7 @@ import (
 )
 
 type ControllerList struct {
+	JwtConfig            middleware.JWTConfig
 	DepartmentController departments.DepartmentController
 	UserController       users.UserController
 	ScheduleController   schedules.ScheduleController
@@ -24,12 +26,13 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	departmentRoute.PUT("/:id", cl.DepartmentController.Update)
 	departmentRoute.DELETE("/:id", cl.DepartmentController.Delete)
 
-	userRoute := e.Group("userRoute")
+	userRoute := e.Group("users")
 	userRoute.POST("", cl.UserController.Store)
 	userRoute.GET("", cl.UserController.GetAll)
 	userRoute.GET("/:id", cl.UserController.GetById)
 	userRoute.PUT("/:id", cl.UserController.Update)
 	userRoute.DELETE("/:id", cl.UserController.Delete)
+	userRoute.POST("/login", cl.UserController.Login)
 
 	scheduleRoute := e.Group("schedules")
 	scheduleRoute.POST("", cl.ScheduleController.Store)

@@ -76,7 +76,7 @@ func (d DepartmentController) Store(c echo.Context) error {
 	return controllers.NewSuccessResponse(
 		c,
 		map[string]interface{}{
-			"department": dept,
+			"department": responses.FromDomain(dept),
 		})
 }
 
@@ -89,7 +89,7 @@ func (d DepartmentController) GetById(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
 	}
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
-		"department": result,
+		"department": responses.FromDomain(result),
 	})
 }
 
@@ -113,7 +113,7 @@ func (d DepartmentController) Update(c echo.Context) error {
 	}
 
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
-		"department": dept,
+		"department": responses.FromDomain(dept),
 	})
 }
 
