@@ -36,7 +36,7 @@ func (controller UserController) Store(c echo.Context) error {
 	}
 
 	return controllers.NewSuccessCreatedResponse(c, map[string]interface{}{
-		"user": user,
+		"user": responses.FromDomain(user),
 	})
 }
 
@@ -57,7 +57,6 @@ func (controller UserController) GetAll(c echo.Context) error {
 		"users": responses.ToResponseList(&usersFromUseCase),
 	})
 }
-
 
 func (controller UserController) GetById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
@@ -102,4 +101,21 @@ func (controller UserController) Delete(c echo.Context) error {
 	}
 
 	return controllers.NewSuccessResponse(c, []int{})
+}
+
+func (controller UserController) Login(c echo.Context) error {
+	var userLoginPayload request.UserLoginPayload
+	if err := c.Bind(&userLoginPayload); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	ctx := c.Request().Context()
+	result, err := controller.UserUsecase.Login(ctx, userLoginPayload.ToDomain())
+	if err != nil {
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"token": result.Token,
+	})
 }

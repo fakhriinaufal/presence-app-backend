@@ -63,3 +63,11 @@ func (m MysqlUserRepository) Delete(ctx context.Context, id int) error {
 	}
 	return nil
 }
+
+func (m MysqlUserRepository) GetByEmail(ctx context.Context, domain *users.Domain) (users.Domain, error) {
+	var result User
+	if err := m.Conn.First(&result, "email = ?", domain.Email).Error; err != nil {
+		return users.Domain{}, err
+	}
+	return result.ToDomain(), nil
+}

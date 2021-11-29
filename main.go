@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"log"
+	_middleware "presence-app-backend/app/middlewares"
 	"presence-app-backend/app/routes"
 	_departmentUsecase "presence-app-backend/business/departments"
 	_presenceUsecase "presence-app-backend/business/presences"
@@ -45,6 +46,11 @@ func main() {
 		DB_Database: viper.GetString("DB_NAME"),
 	}
 
+	configJWT := _middleware.ConfigJWT{
+		SecretJWT:       viper.GetString("JWT_SECRET"),
+		ExpiresDuration: viper.GetInt("JWT_EXPIRED"),
+	}
+
 	conn := configDB.InitDB()
 	DbMigrate(conn)
 
@@ -58,7 +64,7 @@ func main() {
 
 	// user route
 	userRepository := _userRepo.NewMysqlUserRepository(conn)
-	userUsecase := _userUsecase.NewUserUsecase(userRepository, departmentRepository, timeoutContext)
+	userUsecase := _userUsecase.NewUserUsecase(userRepository, departmentRepository, timeoutContext, configJWT)
 	userController := _userController.NewUserController(userUsecase)
 
 	// schedule route
@@ -72,6 +78,7 @@ func main() {
 	presenceController := _presenceController.NewPresenceController(presenceUsecase)
 
 	routeInit := routes.ControllerList{
+		JwtConfig:            configJWT.Init(),
 		DepartmentController: *departmentController,
 		UserController:       *userController,
 		ScheduleController:   *scheduleController,

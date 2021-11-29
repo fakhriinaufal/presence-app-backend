@@ -3,19 +3,22 @@ package users
 import (
 	"context"
 	"errors"
+	"presence-app-backend/app/middlewares"
 	"presence-app-backend/business/departments"
 	"presence-app-backend/helpers/encrpyt"
 	"time"
 )
 
 type UserUsecase struct {
+	JwtConfig      middlewares.ConfigJWT
 	Repo           Repository
 	DeptRepo       departments.Repository
 	contextTimeout time.Duration
 }
 
-func NewUserUsecase(repo Repository, deptRepo departments.Repository, timeout time.Duration) Usecase {
+func NewUserUsecase(repo Repository, deptRepo departments.Repository, timeout time.Duration, jwtConfig middlewares.ConfigJWT) Usecase {
 	return &UserUsecase{
+		JwtConfig:      jwtConfig,
 		Repo:           repo,
 		DeptRepo:       deptRepo,
 		contextTimeout: timeout,
@@ -88,4 +91,23 @@ func (uc UserUsecase) Delete(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (uc UserUsecase) Login(ctx context.Context, domain *Domain) (Domain, error) {
+	var err error
+
+	result, err := uc.Repo.GetByEmail(ctx, domain)
+	if err != nil {
+		return Domain{}, err
+	}
+
+	if !encrpyt.ValidateHash(domain.Password, result.Password) {
+		return Domain{}, errors.New("password mismatch")
+	}
+
+	result.Token, err = uc.JwtConfig.GenerateToken(result.Id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
 }
