@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"presence-app-backend/business/departments"
+	"presence-app-backend/helpers/encrpyt"
 	"time"
 )
 
@@ -28,6 +29,10 @@ func (uc UserUsecase) Store(ctx context.Context, domain *Domain) (Domain, error)
 		return Domain{}, errors.New("department not found")
 	}
 
+	domain.Password, err = encrpyt.Hash(domain.Password)
+	if err != nil {
+		return Domain{}, err
+	}
 	user, err := uc.Repo.Store(ctx, domain)
 	if err != nil {
 		return Domain{}, err
