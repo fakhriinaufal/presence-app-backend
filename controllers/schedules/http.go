@@ -1,6 +1,7 @@
 package schedules
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"presence-app-backend/business/schedules"
@@ -20,6 +21,11 @@ func NewScheduleController(scheduleUC schedules.Usecase) *ScheduleController {
 	}
 }
 
+func validatePayload(payload interface{}) error {
+	validate := validator.New()
+	return validate.Struct(payload)
+}
+
 func (ctrl *ScheduleController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -28,12 +34,18 @@ func (ctrl *ScheduleController) Store(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
+	if err := validatePayload(req); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
 	response, err := ctrl.scheduleUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
 		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return controllers.NewSuccessCreatedResponse(c, responses.FromDomain(response))
+	return controllers.NewSuccessCreatedResponse(c, map[string]interface{}{
+		"schedule": responses.FromDomain(response),
+	})
 }
 
 func (ctrl *ScheduleController) GetAll(c echo.Context) error {
@@ -49,7 +61,9 @@ func (ctrl *ScheduleController) GetAll(c echo.Context) error {
 		result = append(result, responses.FromDomain(val))
 	}
 
-	return controllers.NewSuccessResponse(c, result)
+	return controllers.NewSuccessResponse(c, map[string]interface{}{
+		"schedules": result,
+	})
 }
 
 func (ctrl *ScheduleController) GetById(c echo.Context) error {
@@ -74,6 +88,10 @@ func (ctrl *ScheduleController) Update(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
+	if err := validatePayload(payload); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
 	reqDomain := payload.ToDomain()
 	reqDomain.Id = id
 	result, err := ctrl.scheduleUsecase.Update(ctx, reqDomain)
@@ -90,7 +108,7 @@ func (ctrl *ScheduleController) Delete(c echo.Context) error {
 	ctx := c.Request().Context()
 	id, _ := strconv.Atoi(c.Param("id"))
 
-	err := ctrl.scheduleUsecase.Delete(ctx ,id)
+	err := ctrl.scheduleUsecase.Delete(ctx, id)
 	if err != nil {
 		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
 	}

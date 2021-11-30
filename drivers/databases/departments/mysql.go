@@ -49,18 +49,13 @@ func (repo *MysqlDepartmentRepository) GetById(ctx context.Context, id int) (dpt
 	return department.ToDomain(), nil
 }
 
-func (repo *MysqlDepartmentRepository) Update(ctx context.Context, department dpt.Domain, id int) (dpt.Domain, error) {
-	var departmentFromDb Department
-	repo.Conn.First(&departmentFromDb, id)
-
-	departmentFromDb.Name = department.Name
-	departmentFromDb.Description = department.Description
-
-	if err := repo.Conn.Save(&departmentFromDb).Error; err != nil {
+func (repo *MysqlDepartmentRepository) Update(ctx context.Context, department *dpt.Domain) (dpt.Domain, error) {
+	departmentFromDb := FromDomain(department)
+	if err := repo.Conn.Save(departmentFromDb).Error; err != nil {
 		return dpt.Domain{}, err
 	}
-
 	return departmentFromDb.ToDomain(), nil
+
 }
 
 func (repo *MysqlDepartmentRepository) Delete(ctx context.Context, id int) error {

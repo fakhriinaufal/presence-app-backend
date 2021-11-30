@@ -7,7 +7,7 @@ type UserPayload struct {
 	Name         string `json:"name" validate:"required"`
 	Email        string `json:"email" validate:"required"`
 	Password     string `json:"password" validate:"required"`
-	Dob          string `json:"dob"`
+	Dob          string `json:"dob" validate:"required"`
 }
 
 func (user UserPayload) ToDomain() users.Domain {
