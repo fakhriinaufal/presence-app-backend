@@ -3,9 +3,11 @@ package users
 import (
 	"context"
 	"errors"
+	"fmt"
 	"presence-app-backend/app/middlewares"
 	"presence-app-backend/business/departments"
 	"presence-app-backend/helpers/encrpyt"
+	"strings"
 	"time"
 )
 
@@ -105,7 +107,18 @@ func (uc UserUsecase) Login(ctx context.Context, domain *Domain) (Domain, error)
 		return Domain{}, errors.New("password mismatch")
 	}
 
-	result.Token, err = uc.JwtConfig.GenerateToken(result.Id)
+	resultDomain, err := uc.DeptRepo.GetById(ctx, result.DepartmentId)
+	if err != nil {
+		return Domain{}, err
+	}
+
+	fmt.Println(resultDomain.Name)
+	if strings.ToLower(resultDomain.Name) == "admin" {
+		result.Token, err = uc.JwtConfig.GenerateToken(result.Id, true)
+	} else {
+		result.Token, err = uc.JwtConfig.GenerateToken(result.Id, false)
+	}
+
 	if err != nil {
 		return Domain{}, err
 	}
