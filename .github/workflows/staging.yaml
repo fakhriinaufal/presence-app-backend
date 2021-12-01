@@ -22,6 +22,8 @@ jobs:
     needs: unit-test
     steps:
       - uses: actions/checkout@v2
+      - name: create env
+        run: echo "$ENV" > .env
       - name: build docker
         run: docker build -t fakhriinaufal/presence-app-backend:latest .
       - name: login docker hub
