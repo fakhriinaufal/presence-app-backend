@@ -28,7 +28,6 @@ jobs:
         run: |
           echo "$DOT_ENV"
           echo "$DOT_ENV" > .env
-          END
       - name: build docker
         run: docker build -t fakhriinaufal/presence-app-backend:latest .
       - name: login docker hub
