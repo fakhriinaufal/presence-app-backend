@@ -23,9 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: create env
+        env:
+          DOT_ENV: ${{ secrets.ENV }}
         run: |
-          echo ${{ secrets.ENV }}
-          echo ${{ secrets.ENV }} > .env
+          echo "$DOT_ENV"
+          echo "$DOT_ENV" > .env
+          END
       - name: build docker
         run: docker build -t fakhriinaufal/presence-app-backend:latest .
       - name: login docker hub
