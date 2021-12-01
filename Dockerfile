@@ -12,6 +12,7 @@ RUN go build -o main
 # Stage 2
 FROM alpine:3.14
 WORKDIR /app
+COPY --from=builder /app/.env .
 COPY --from=builder /app/main .
 
 EXPOSE 8000
