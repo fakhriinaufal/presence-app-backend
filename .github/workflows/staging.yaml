@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: build docker
-        run: docker build -t fakhriinaufal/presence-app-backend:1.0.0 .
+        run: docker build -t fakhriinaufal/presence-app-backend:latest
       - name: login docker hub
         uses: docker/login-action@v1
         with:
