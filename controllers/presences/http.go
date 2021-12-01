@@ -1,6 +1,7 @@
 package presences
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"presence-app-backend/business/presences"
@@ -20,11 +21,20 @@ func NewPresenceController(presenceUC presences.Usecase) *PresenceController {
 	}
 }
 
+func validatePayload(payload interface{}) error {
+	validate := validator.New()
+	return validate.Struct(payload)
+}
+
 func (ctrl *PresenceController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	req := requests.Presence{}
 	if err := c.Bind(&req); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	if err := validatePayload(req); err != nil {
 		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
@@ -76,6 +86,10 @@ func (ctrl *PresenceController) Update(c echo.Context) error {
 
 	var presenceRequest requests.PresenceUpdate
 	if err := c.Bind(&presenceRequest); err != nil {
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	if err := validatePayload(presenceRequest); err != nil {
 		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 

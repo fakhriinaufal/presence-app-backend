@@ -32,8 +32,9 @@ func (d DepartmentController) GetAll(c echo.Context) error {
 	}
 
 	if err != nil {
-		return controllers.NewErrorResponse(c, http.StatusOK, err)
+		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
+
 	if returnedDepartment == nil {
 		return controllers.NewSuccessResponse(c, []int{})
 	}
@@ -56,7 +57,7 @@ func (d DepartmentController) Store(c echo.Context) error {
 	err = c.Bind(&department)
 
 	if err != nil {
-		return controllers.NewErrorResponse(c, http.StatusUnprocessableEntity, err)
+		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	isValid, err := isDepartmentStoreValid(&department)
@@ -66,9 +67,8 @@ func (d DepartmentController) Store(c echo.Context) error {
 	}
 
 	ctx := c.Request().Context()
-	dept := department.ToDomain()
-	dept, err = d.DepartmentUsecase.Store(ctx, &dept)
 
+	dept, err := d.DepartmentUsecase.Store(ctx, department.ToDomain())
 	if err != nil {
 		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -76,7 +76,7 @@ func (d DepartmentController) Store(c echo.Context) error {
 	return controllers.NewSuccessResponse(
 		c,
 		map[string]interface{}{
-			"department": dept,
+			"department": responses.FromDomain(dept),
 		})
 }
 
@@ -89,7 +89,7 @@ func (d DepartmentController) GetById(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
 	}
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
-		"department": result,
+		"department": responses.FromDomain(result),
 	})
 }
 
@@ -106,14 +106,16 @@ func (d DepartmentController) Update(c echo.Context) error {
 		return controllers.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	dept, err := d.DepartmentUsecase.Update(ctx, department.ToDomain(), id)
+	deptDomain := department.ToDomain()
+	deptDomain.ID = id
+	dept, err := d.DepartmentUsecase.Update(ctx, deptDomain)
 
 	if err != nil {
-		return controllers.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return controllers.NewErrorResponse(c, http.StatusNotFound, err)
 	}
 
 	return controllers.NewSuccessResponse(c, map[string]interface{}{
-		"department": dept,
+		"department": responses.FromDomain(dept),
 	})
 }
 

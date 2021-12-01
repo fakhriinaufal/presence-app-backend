@@ -7,9 +7,9 @@ import (
 )
 
 type scheduleUsecase struct {
-	scheduleRepository Repository
+	scheduleRepository   Repository
 	departmentRepository departments.Repository
-	contextTimeout time.Duration
+	contextTimeout       time.Duration
 }
 
 func NewScheduleUsecase(sr Repository, dr departments.Repository, timeout time.Duration) Usecase {

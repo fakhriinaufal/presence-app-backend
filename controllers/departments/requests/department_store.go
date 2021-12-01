@@ -9,8 +9,8 @@ type DepartmentStore struct {
 	Description string `json:"description" validate:"required"`
 }
 
-func (dept DepartmentStore) ToDomain() departments.Domain {
-	return departments.Domain{
+func (dept *DepartmentStore) ToDomain() *departments.Domain {
+	return &departments.Domain{
 		Name:        dept.Name,
 		Description: dept.Description,
 	}
