@@ -2,13 +2,17 @@ package presences
 
 import (
 	"context"
+	"presence-app-backend/business/schedules"
+	"presence-app-backend/business/users"
 	"time"
 )
 
 type Domain struct {
 	Id         int
 	UserId     int
+	User       users.Domain
 	ScheduleId int
+	Schedule   schedules.Domain
 	Type       string
 	Status     string
 	CreatedAt  time.Time
