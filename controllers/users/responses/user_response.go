@@ -6,13 +6,13 @@ import (
 )
 
 type UserResponse struct {
-	Id int `json:"id"`
-	DepartmentId int `json:"department_id"`
-	Name string `json:"name"`
-	Email string `json:"email"`
-	Dob string `json:"dob"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Id           int       `json:"id"`
+	DepartmentId int       `json:"department_id"`
+	Name         string    `json:"name"`
+	Email        string    `json:"email"`
+	Dob          string    `json:"dob"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 func (u *UserResponse) ToDomain() users.Domain {

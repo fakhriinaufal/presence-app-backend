@@ -2,8 +2,9 @@ package presences
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"presence-app-backend/business/presences"
+
+	"gorm.io/gorm"
 )
 
 type MysqlPresenceRepository struct {
@@ -26,7 +27,7 @@ func (repo *MysqlPresenceRepository) Store(ctx context.Context, domain *presence
 
 func (repo *MysqlPresenceRepository) GetAll(ctx context.Context) ([]presences.Domain, error) {
 	var result []Presence
-	if err := repo.Conn.Find(&result).Error; err != nil {
+	if err := repo.Conn.Preload("User").Preload("Schedule").Find(&result).Error; err != nil {
 		return []presences.Domain{}, err
 	}
 	var domainResult []presences.Domain
@@ -38,7 +39,7 @@ func (repo *MysqlPresenceRepository) GetAll(ctx context.Context) ([]presences.Do
 
 func (repo *MysqlPresenceRepository) GetById(ctx context.Context, id int) (presences.Domain, error) {
 	var result Presence
-	if err := repo.Conn.First(&result, id).Error; err != nil {
+	if err := repo.Conn.Preload("User").Preload("Schedule").First(&result, id).Error; err != nil {
 		return presences.Domain{}, err
 	}
 	return result.ToDomain(), nil
